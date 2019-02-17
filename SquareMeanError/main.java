@@ -5,7 +5,9 @@ import java.util.ArrayList;
 public class main {
 
 	public static void main(String[] args) {
-    String filename = "winequality-red.csv";
+
+		//Get file
+    String filename = "winequality-red-train.csv";
     String line = null;
     ArrayList<Double[]> sample_aux = new ArrayList<Double[]>();
     ArrayList<Double> y_aux = new ArrayList<Double>();
@@ -14,6 +16,8 @@ public class main {
       FileReader fileReader = new FileReader(filename);
       BufferedReader bufferedReader = new BufferedReader(fileReader);
       while((line = bufferedReader.readLine()) != null) {
+
+				//Dont take into account headers
 				if(!line.contains("fixed")) {
 					String[] stringArray = line.split(",");
 					Double[] doubleArray = new Double[stringArray.length - 1];
@@ -36,6 +40,7 @@ public class main {
 		double[][] samples = new double[sample_aux.size()][sample_aux.get(1).length];
 		double[] y = new double[y_aux.size()];
 
+		//Change from Double to double
 		for(int i = 0; i < sample_aux.size(); i++) {
 			Double[] tmp = sample_aux.get(i);
 			for(int j = 0; j < tmp.length; j++) {
@@ -68,6 +73,7 @@ public class main {
 				b_samples[i][1] = samples[i];
 			}*/
 		} else {
+			//Add bias 1 to the samples
 			b_samples = new double[samples.length][samples[0].length+1];
 			for(int i = 0; i < samples.length; i++) {
 				b_samples[i][0] = 1;
@@ -77,8 +83,9 @@ public class main {
 			}
 		}
 
+		//Scale the samples using mean and standard deviation
 		scale(b_samples);
-		double alfa = 0.5;
+		double alfa = 0.01;
 		int epochs = 0;
 		while(true) {
 			old_params = Arrays.copyOf(params, params.length);
@@ -89,13 +96,6 @@ public class main {
 				break;
 			}
 		}
-		/*System.out.println("Samples:");
-		for(int i = 0; i < b_samples.length; i++) {
-			for(int j = 0; j < b_samples[0].length; j++) {
-				System.out.printf("%.5f ", b_samples[i][j]);
-			}
-			System.out.println();
-		}*/
 		System.out.println("Final params:");
 		for(int i = 0; i < params.length; i++) {
 			System.out.printf("%.5f ", params[i]);
@@ -111,31 +111,28 @@ public class main {
 			error = Math.pow(hyp - y[i], 2);
 			error_sum += error;
 		}
-		System.out.printf("Square mean error: %.5f \n", error_sum/b_samples.length);
+		error_sum = (1.0/b_samples.length) * error_sum;
+		System.out.printf("Square mean error: %.5f\n", error_sum/b_samples.length);
 	}
 
 	public static void scale(double[][] m) {
-		double acum = 0.0, max = -10000.0;
-		for(int i = 0; i < m.length; i++) {
-			for(int j = 1; j < m[0].length; j++) {
-				//m[i][j] = (m[i][j] - 1) / m.length;
-				acum =+ m[i][j];
-				if(m[i][j] > max) {
-					max = m[i][j];
-				}
+		double acum, mean, s_dev;
+		for(int j = 1; j < m[0].length; j++) {
+			acum = 0.0;
+			for(int i = 0; i < m.length; i++) {
+				acum += m[i][j];
+			}
+			mean = acum / m.length;
+			s_dev = 0;
+			for(int i = 0; i < m.length; i++) {
+				s_dev += Math.pow(m[i][j] - mean, 2);
+			}
+			s_dev = s_dev * (1.0/m.length);
+			s_dev = Math.sqrt(s_dev);
+			for(int i = 0; i < m.length; i++) {
+				m[i][j] = (m[i][j] - mean) / s_dev;
 			}
 		}
-		for(int i = 0; i < m.length; i++) {
-			for(int j = 1; j < m[0].length; j++) {
-				m[i][j] = (m[i][j] - (acum / m.length)) / max;
-			}
-		}
-		/*for(int i = 0; i < m.length; i++) {
-			for(int j = 0; j < m[0].length; j++) {
-				System.out.printf("%f ", m[i][j]);
-			}
-			System.out.println();
-		}*/
 	}
 
 	public static double[] gradient(double[]params, double[][] samples, double[] y, double alfa) {
@@ -156,7 +153,6 @@ public class main {
 		for(int i = 0; i < params.length; i++) {
 			acum = acum + params[i] * samples[i];
 		}
-		//System.out.println(acum);
 		return acum;
 	}
 
