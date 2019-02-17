@@ -35,6 +35,7 @@ def show_errors(params, samples,y):
 #	print(samples)
 	for i in range(len(samples)):
 		hyp = h(params,samples[i])
+		print(samples[i])
 		print( "hyp  %f  y %f " % (hyp,  y[i]))
 		error=hyp-y[i]
 		error_acum+=error**2 # this error is the original cost function, (the one used to make updates in GD is the derivated verssion of this formula)

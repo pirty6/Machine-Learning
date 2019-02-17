@@ -9,7 +9,7 @@ public class main {
 	public static void main(String[] args) {
 
 		getInfo("winequality-red-train.csv");
-		double[] params = new double[samples[0].length];
+		double[] params = new double[samples[0].length + 1];
 
 		//Univariate
 		/*double[] params = new double[2];
@@ -73,6 +73,13 @@ public class main {
 		error(params, b_samples, y);
 	}
 
+
+
+
+
+
+
+/*FUNCTIONS*/
 	private static void error(double[] params, double[][] b_samples, double[] y) {
 		double error_sum = 0.0, hyp, error;
 		for(int i = 0; i < b_samples.length; i++) {
