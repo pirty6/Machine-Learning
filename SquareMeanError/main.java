@@ -3,55 +3,13 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 public class main {
+	public static double y[];
+	public static double samples[][];
 
 	public static void main(String[] args) {
 
-		//Get file
-    String filename = "winequality-red-train.csv";
-    String line = null;
-    ArrayList<Double[]> sample_aux = new ArrayList<Double[]>();
-    ArrayList<Double> y_aux = new ArrayList<Double>();
-
-    try {
-      FileReader fileReader = new FileReader(filename);
-      BufferedReader bufferedReader = new BufferedReader(fileReader);
-      while((line = bufferedReader.readLine()) != null) {
-
-				//Dont take into account headers
-				if(!line.contains("fixed")) {
-					String[] stringArray = line.split(",");
-					Double[] doubleArray = new Double[stringArray.length - 1];
-					for(int i = 0; i < stringArray.length - 1; i++) {
-						String numberAsString = stringArray[i];
-						doubleArray[i] = Double.parseDouble(numberAsString);
-					}
-					sample_aux.add(doubleArray);
-					y_aux.add(Double.parseDouble(stringArray[stringArray.length - 1]));
-				}
-      }
-      bufferedReader.close();
-    } catch(FileNotFoundException ex) {
-      System.out.println("Unable to open file");
-    } catch (IOException ex) {
-      System.out.println("Error reading file");
-    }
-
-		double[] params = new double[sample_aux.get(1).length];
-		double[][] samples = new double[sample_aux.size()][sample_aux.get(1).length];
-		double[] y = new double[y_aux.size()];
-
-		//Change from Double to double
-		for(int i = 0; i < sample_aux.size(); i++) {
-			Double[] tmp = sample_aux.get(i);
-			for(int j = 0; j < tmp.length; j++) {
-				samples[i][j] = (double) tmp[j];
-			}
-		}
-
-		for(int i = 0; i < y.length; i++) {
-			y[i] = (double) y_aux.get(i);
-		}
-
+		getInfo("winequality-red-train.csv");
+		double[] params = new double[samples[0].length];
 
 		//Univariate
 		/*double[] params = new double[2];
@@ -101,6 +59,18 @@ public class main {
 			System.out.printf("%.5f ", params[i]);
 		}
     System.out.println();
+		System.out.println("Testing...");
+
+		getInfo("winequality-red-test.csv");
+		b_samples = new double[samples.length][samples[0].length+1];
+		for(int i = 0; i < samples.length; i++) {
+			b_samples[i][0] = 1;
+			for(int j = 0; j < samples[0].length; j++) {
+				b_samples[i][j+1] = samples[i][j];
+			}
+		}
+		scale(b_samples);
+		error(params, b_samples, y);
 	}
 
 	private static void error(double[] params, double[][] b_samples, double[] y) {
@@ -154,6 +124,52 @@ public class main {
 			acum = acum + params[i] * samples[i];
 		}
 		return acum;
+	}
+
+	public static void getInfo(String name) {
+		String filename = name;
+		String line = null;
+		ArrayList<Double[]> sample_aux = new ArrayList<Double[]>();
+		ArrayList<Double> y_aux = new ArrayList<Double>();
+
+		try {
+			FileReader fileReader = new FileReader(filename);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			while((line = bufferedReader.readLine()) != null) {
+
+				//Dont take into account headers
+				if(!line.contains("fixed")) {
+					String[] stringArray = line.split(",");
+					Double[] doubleArray = new Double[stringArray.length - 1];
+					for(int i = 0; i < stringArray.length - 1; i++) {
+						String numberAsString = stringArray[i];
+						doubleArray[i] = Double.parseDouble(numberAsString);
+					}
+					sample_aux.add(doubleArray);
+					y_aux.add(Double.parseDouble(stringArray[stringArray.length - 1]));
+				}
+			}
+			bufferedReader.close();
+		} catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file");
+		} catch (IOException ex) {
+			System.out.println("Error reading file");
+		}
+
+		samples = new double[sample_aux.size()][sample_aux.get(1).length];
+		y = new double[y_aux.size()];
+
+		//Change from Double to double
+		for(int i = 0; i < sample_aux.size(); i++) {
+			Double[] tmp = sample_aux.get(i);
+			for(int j = 0; j < tmp.length; j++) {
+				samples[i][j] = (double) tmp[j];
+			}
+		}
+
+		for(int i = 0; i < y.length; i++) {
+			y[i] = (double) y_aux.get(i);
+		}
 	}
 
 }
