@@ -53,7 +53,7 @@ def show_errors(params, samples, y):
 		error_acum=+error # this error is different from the one used to update, this is general for each sentence it is not for each individual param
 	#print("acum error %f " % (error_acum));
 	mean_error_param=error_acum/len(samples);
-	#print("mean error %f " % (mean_error_param));
+	print("mean error %f " % (mean_error_param));
 	__errors__.append(mean_error_param)
 	return mean_error_param;
 
