@@ -7,9 +7,9 @@ public class main {
 	public static double samples[][];
 
 	public static void main(String[] args) {
+		//Get the values from the file train.csv and adds them to the y and samples array
 		getInfo("train.csv");
 		double[] params = new double[samples[0].length + 1];
-		System.out.println("salio???");
 		// double[] params = new double[3];
 		// double[][] samples = {{12.0, 11.0}, {31.0,21.0}, {43.0,32.0}, {64.0,94.0}, {85.0,75.0}, {64.0,94.0}, {85.0,15.0}, {100.0,94.0}, {85.0,95.0}, {64.0,54.0}, {5.0,5.0}};
 		// double[] y = {0,0,0,1,1,1,0,1,1,0,0};
@@ -41,6 +41,7 @@ public class main {
 			System.out.printf("%.5f \n", params[i]);
 		}
 		System.out.println();
+		//Test the model using the parameters from training
 		System.out.println("Testing...");
 		getInfo("test.csv");
 		b_samples = new double[samples.length][samples[0].length+1];
@@ -55,7 +56,7 @@ public class main {
 
 
 
-
+// Function that returns the new parameters by minimizing the cost using gradient descent
 		public static double[] gradient(double[] params, double[][] samples, double[] y, double alfa) {
 			double[] temp = Arrays.copyOf(params, params.length);
 			for(int i = 0; i < params.length; i++) {
@@ -69,6 +70,7 @@ public class main {
 			return temp;
 		}
 
+// Function to return the predicted value using the sigmoid Function
 		public static double hyphotesis(double[] params, double[] samples) {
 			double acum = 0.0;
 			for(int i = 0; i < params.length; i++) {
@@ -79,6 +81,9 @@ public class main {
 			return acum;
 		}
 
+	// Function to return the mean error of the model using cross entropy, when
+	//test = 1 then it will print discrete values if not it will print them as a
+	//continuos value between 1 and 0
 		public static double error(double[] params, double[][] b_samples, double[] y, int test) {
 			double error_sum = 0.0, hyp, error = 0.0;
 			for(int i = 0; i < b_samples.length; i++) {
@@ -110,6 +115,7 @@ public class main {
 			return error_sum;
 		}
 
+// Function to get the values from files
 		public static void getInfo(String name) {
 			String filename = name;
 			String line = null;
@@ -162,6 +168,7 @@ public class main {
 									doubleArray[i] = 4.0;
 								}
 							}else if(i == 3) {
+								//Make groups based on the fare
 								String numberAsString = stringArray[i];
 								double aux = Double.parseDouble(numberAsString);
 								if(aux <= 7.91) {
