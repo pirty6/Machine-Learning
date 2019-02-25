@@ -8,7 +8,10 @@ public class main {
 
 	public static void main(String[] args) {
 
+		// Read file with data
 		getInfo("winequality-red-train.csv");
+
+		// Create array of parameters
 		double[] params = new double[samples[0].length + 1];
 
 		//Univariate
@@ -22,7 +25,10 @@ public class main {
 		// double[] y = {2.0,4.0,6.0,8.0,10.0};
 		boolean univariate = false;
 
+		// Array for the values with the bias
 		double[][] b_samples = null;
+
+		// Array to store the parameters
 		double[] old_params = new double[params.length];
 		if(univariate) {
 			/*b_samples = new double[samples.length][2];
@@ -80,6 +86,8 @@ public class main {
 
 
 /*FUNCTIONS*/
+
+// Function that gives the square mean error
 	private static void error(double[] params, double[][] b_samples, double[] y) {
 		double error_sum = 0.0, hyp, error;
 		for(int i = 0; i < b_samples.length; i++) {
@@ -92,6 +100,7 @@ public class main {
 		System.out.printf("Square mean error: %.5f\n", error_sum/b_samples.length);
 	}
 
+// Function that scales the data using the mean and the standard deviation
 	public static void scale(double[][] m) {
 		double acum, mean, s_dev;
 		for(int j = 1; j < m[0].length; j++) {
@@ -112,6 +121,7 @@ public class main {
 		}
 	}
 
+// Function that does the gradient descent
 	public static double[] gradient(double[]params, double[][] samples, double[] y, double alfa) {
 		double[] temp = Arrays.copyOf(params, params.length);
 		for(int i = 0; i < params.length; i++) {
@@ -125,6 +135,7 @@ public class main {
 		return temp;
 	}
 
+// Function that returns the calulated value using the hyphotesis y=mx+b = x1b + x2T2 + ...
 	private static double hyphotesis(double[] params, double[] samples) {
 		double acum = 0;
 		for(int i = 0; i < params.length; i++) {
@@ -133,6 +144,7 @@ public class main {
 		return acum;
 	}
 
+// Function that returns the values that are read from the file
 	public static void getInfo(String name) {
 		String filename = name;
 		String line = null;
