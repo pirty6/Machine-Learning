@@ -38,7 +38,7 @@ public class main {
 		}
 		System.out.println("Final params:");
 		for(int i = 0; i < params.length; i++) {
-			System.out.printf("%.5f \n", params[i]);
+			System.out.printf("%.5f ", params[i]);
 		}
 		System.out.println();
 		//Test the model using the parameters from training
