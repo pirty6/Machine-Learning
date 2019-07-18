@@ -203,7 +203,7 @@ public class main {
 			//Change from Double to double
 			for(int i = 0; i < sample_aux.size(); i++) {
 				Double[] tmp = sample_aux.get(i);
-				System.out.println(Arrays.toString(tmp));
+				//System.out.println(Arrays.toString(tmp));
 				for(int j = 0; j < tmp.length; j++) {
 					if(tmp[j] == null) {
 						samples[i][j] = 1.0;
